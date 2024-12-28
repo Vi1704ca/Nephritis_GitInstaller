@@ -97,10 +97,11 @@ class GitHubHelperApp:
             self.clone_path.insert(0, folder)
 
     def select_file(self):
-        file_path = filedialog.askopenfilename(title="Select file to upload")
-        if file_path:
-            self.upload_file_path.delete(0, ctk.END)
-            self.upload_file_path.insert(0, file_path)
+        file_paths = filedialog.askopenfilenames(title="Select files to upload")
+        if file_paths:
+            self.upload_file_path.delete(0, ctk.END) 
+            self.upload_file_path.insert(0, ", ".join(file_paths)) 
+
 
     def clone_repo(self):
         repo_url = self.clone_repo_url.get()
@@ -134,35 +135,24 @@ class GitHubHelperApp:
             return
 
         try:
-            # Создаём временную директорию, если репозиторий ещё не клонирован
             if not hasattr(self, 'repo_path'):
-                self.repo_path = os.path.join(os.getcwd(), f"temp_repo_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
-
-            # Если репозиторий ещё не клонирован, клонируем его
+                self.repo_path = os.path.join(os.getcwd())
             if not os.path.exists(self.repo_path):
                 subprocess.run(["git", "clone", repo_url, self.repo_path], check=True)
-
-            # Переходим в директорию репозитория
             os.chdir(self.repo_path)
 
-            # Проверяем, существует ли ветка
             branches = subprocess.run(["git", "branch", "--list", branch_name], capture_output=True, text=True)
             if branch_name not in branches.stdout:
                 subprocess.run(["git", "checkout", "-b", branch_name], check=True)
             else:
                 subprocess.run(["git", "checkout", branch_name], check=True)
 
-            # Получаем изменения с удалённого репозитория
             subprocess.run(["git", "pull", "origin", branch_name], check=False)
-
-            # Копируем файл в репозиторий
             shutil.copy(file_path, self.repo_path)
 
-            # Добавляем и коммитим изменения
             subprocess.run(["git", "add", "."], check=True)
             subprocess.run(["git", "commit", "-m", commit_message], check=True)
 
-            # Отправляем изменения на удалённый репозиторий
             subprocess.run(["git", "push", "-u", "origin", branch_name], check=True)
 
             messagebox.showinfo("Success", f"The file has been successfully uploaded to the repository on the branch {branch_name}.")
