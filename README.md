@@ -20,7 +20,7 @@
 
 <h2>Інсталяція</h2>
     <p>Клонуйте репозиторій:</p>
-    <pre><code>git clone https://github.com/yourusername/Nephritis_GitInstaller.git</code></pre>
+    <pre><code>git clone https://github.com/Vi1704ca/Nephritis_GitInstaller.gi)</code></pre>
     <p>Перейдіть у директорію проекту:</p>
     <pre><code>cd Nephritis_GitInstaller</code></pre>
     <p>Запустіть програму:</p>
