@@ -40,6 +40,7 @@
 <h2>Подяки</h2>
     <p>Особлива подяка творцям:</p>
     <ul>
+        <li>Vi1704ca</li>
         <li>Python</li>
         <li>CustomTkinter</li>
         <li>Git</li>
